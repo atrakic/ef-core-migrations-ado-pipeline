@@ -4,7 +4,7 @@
 [![license](https://img.shields.io/github/license/atrakic/ef-core-migrations-ado-pipeline.svg)](https://github.com/atrakic/ef-core-migrations-ado-pipeline/blob/main/LICENSE)
 
 
-> Example how to run DotNet EF core migrations using docker and [Azure DevOps pipelines](.azdo/build.yml).
+> Example how to run DotNet EF core migrations using [docker](Makefile) and [Azure DevOps pipelines](.azdo/build.yml).
 
 ### Developer setup
 
