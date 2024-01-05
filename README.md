@@ -1,6 +1,6 @@
 # ef-core-migrations-ado-pipeline
 
-[![ci](https://github.com/atrakic/def-core-migrations-ado-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/atrakic/ef-core-migrations-ado-pipeline/actions/workflows/ci.yml)
+[![.NET](https://github.com/atrakic/ef-core-migrations-ado-pipeline/actions/workflows/ci.yml/badge.svg)](https://github.com/atrakic/ef-core-migrations-ado-pipeline/actions/workflows/ci.yml)
 [![license](https://img.shields.io/github/license/atrakic/ef-core-migrations-ado-pipeline.svg)](https://github.com/atrakic/ef-core-migrations-ado-pipeline/blob/main/LICENSE)
 
 
