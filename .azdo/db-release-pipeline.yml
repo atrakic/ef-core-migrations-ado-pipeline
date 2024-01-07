@@ -1,0 +1,44 @@
+# Explicitly set none for repositry trigger
+trigger:
+- none
+
+resources:
+  pipelines:
+  - pipeline: sqlbuild  # Name of the pipeline resource
+    source: myapp-build-pipeline # Name of the triggering pipeline
+    trigger: 
+      branches:
+      - master
+
+variables:
+  vmImageName: 'ubuntu-latest'
+  sqlfilepath: 'SQL/dbscript.sql'
+  sqlserver: ''
+  dbname: ''
+  dbusername: ''
+  dbpasswd: ''
+
+jobs:
+- deployment: SQL-Deploy
+  displayName: Deploy
+  environment: dev
+  pool: 
+    vmImage: $(vmImageName)
+  strategy:
+    runOnce:
+      deploy:
+        steps:          
+          - download: SQLScripts # myappbuild
+            artifact: drop
+          
+          #- task: DownloadPipelineArtifact@2
+          #  inputs:
+          #    buildType: 'specific'
+          #    targetPath: '$(Pipeline.Workspace)'
+
+          - task: PowerShell@2
+            displayName: 'PowerShell Script'
+            inputs:
+              targetType: 'inline'
+              script: |
+                Invoke-Sqlcmd -InputFile "$(agent.builddirectory)/$(sqlfilepath)" -ServerInstance $(sqlserver) -Database $(dbname) -Username "$(dbusername)" -Password "$(dbpasswd)" -QueryTimeout 36000 -Verbose
