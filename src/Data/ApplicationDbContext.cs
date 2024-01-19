@@ -30,19 +30,5 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Customer>()
-            .HasMany(c => c.Orders)
-            .WithOne(o => o.Customer)
-            .HasForeignKey(o => o.CustomerId);
-
-        modelBuilder.Entity<Order>()
-            .HasMany(o => o.OrderDetails)
-            .WithOne(od => od.Order)
-            .HasForeignKey(od => od.OrderId);
-
-        modelBuilder.Entity<Product>()
-            .HasMany(p => p.OrderDetails)
-            .WithOne(od => od.Product)
-            .HasForeignKey(od => od.ProductId);
     }
 }
