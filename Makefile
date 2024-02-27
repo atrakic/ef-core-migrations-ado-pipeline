@@ -1,12 +1,16 @@
 MAKEFLAGS += --silent
 
 BASEDIR=$(shell git rev-parse --show-toplevel)
-DB ?= db
-
-PROJECT ?= demo
+MNAME=$(shell git rev-parse --abbrev-ref HEAD)-$(shell date +%s)
 SQL_CONNECTION ?= "Server=localhost;UID=sa;PWD=${MSSQL_SA_PASSWORD};trusted_connection=false;Persist Security Info=False;Encrypt=False;"
 
-all: clean
+DB ?= db
+PROJECT ?= demo
+
+all: clean db
+	$(MAKE) run
+
+db:
 	DOCKER_BUILDKIT=1 docker-compose up --no-color --remove-orphans -d
 	docker-compose ps -a
 	while ! \
@@ -15,9 +19,15 @@ all: clean
 		echo "waiting $(DB) ..."; \
 		sleep 1; \
 		done
-	SQL_CONNECTION=${SQL_CONNECTION} dotnet ef migrations add InitialCreate --project ${BASEDIR}/src/${PROJECT}.csproj 
-	SQL_CONNECTION=${SQL_CONNECTION} dotnet ef database update --project ${BASEDIR}/src/${PROJECT}.csproj
+
+run:
 	SQL_CONNECTION=${SQL_CONNECTION} dotnet run --project ${BASEDIR}/src/${PROJECT}.csproj
+
+migrate:
+	SQL_CONNECTION=${SQL_CONNECTION} dotnet ef migrations add ${MNAME} --project ${BASEDIR}/src/${PROJECT}.csproj
+	SQL_CONNECTION=${SQL_CONNECTION} dotnet ef database update --project ${BASEDIR}/src/${PROJECT}.csproj
+	SQL_CONNECTION=${SQL_CONNECTION} dotnet ef migrations list --project ${BASEDIR}/src/${PROJECT}.csproj
+	$(MAKE) run
 
 healthcheck:
 	docker inspect $(DB) --format "{{ (index (.State.Health.Log) 0).Output }}"

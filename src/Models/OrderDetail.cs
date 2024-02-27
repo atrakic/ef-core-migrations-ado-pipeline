@@ -1,4 +1,4 @@
-namespace ContosoPizza.Models;
+namespace ExampleEF.Models;
 
 public class OrderDetail
 {

@@ -6,7 +6,7 @@ resources:
   pipelines:
   - pipeline: sqlbuild  # Name of the pipeline resource
     source: myapp-build-pipeline # Name of the triggering pipeline
-    trigger: 
+    trigger:
       branches:
       - master
 
@@ -22,15 +22,15 @@ jobs:
 - deployment: SQL-Deploy
   displayName: Deploy
   environment: dev
-  pool: 
+  pool:
     vmImage: $(vmImageName)
   strategy:
     runOnce:
       deploy:
-        steps:          
+        steps:
           - download: SQLScripts # myappbuild
             artifact: drop
-          
+
           #- task: DownloadPipelineArtifact@2
           #  inputs:
           #    buildType: 'specific'

@@ -4,12 +4,11 @@ using Microsoft.Extensions.Configuration;
 using System;
 using System.IO;
 
-using ContosoPizza.Data;
-using ContosoPizza.Models;
+using ExampleEF.Data;
+using ExampleEF.Models;
 
-namespace ContosoPizza
+namespace ExampleEF
 {
-    // https://stackoverflow.com/questions/48363173/how-to-allow-migration-for-a-console-application/48372990#48372990
     class Program : IDesignTimeDbContextFactory<ApplicationDbContext>
     {
         public ApplicationDbContext CreateDbContext(string[] args)
@@ -19,36 +18,63 @@ namespace ContosoPizza
         }
         private static void Main(string[] args)
         {
-            Program program = new Program();
+            Program program = new();
             var context = program.CreateDbContext(args);
 
-            Product veggieSpecial = new Product()
-            {
-                Name = "Veggie Special Pizza",
-                Price = 9.99M
-            };
-            context.Add(veggieSpecial);
-            context.SaveChanges();
-
-            Product deluxeMeat = new Product()
-            {
-                Name = "Deluxe Meat Pizza",
-                Price = 12.99M
-            };
-            context.Add(deluxeMeat);
-            context.SaveChanges();
+            //context.Database.EnsureCreated();
+            context.Database.Migrate();
+            SeedData(context);
 
             var products = context.Products
                                 .Where(p => p.Price > 10.00M)
                                 .OrderBy(p => p.Name).ToList();
 
             foreach (Product p in products)
-            {
-                Console.WriteLine($"Id:    {p.Id}");
-                Console.WriteLine($"Name:  {p.Name}");
-                Console.WriteLine($"Price: {p.Price}");
-                Console.WriteLine(new string('-', 20));
-            }
+                if (context.Products.Any())
+                {
+                    Console.WriteLine($"Id:    {p.Id}");
+                    Console.WriteLine($"Name:  {p.Name}");
+                    Console.WriteLine($"Price: {p.Price}");
+                    Console.WriteLine(new string('-', 20));
+                }
         }
+
+        static int SeedData(ApplicationDbContext context)
+        {
+            if (context.Products.Any())
+            {
+                return -1;   // DB has been seeded
+            }
+            else
+            {
+
+            Console.WriteLine("Seeding the database.");
+
+            var pizza1 = new Product() { Name = "Pepperoni", Price = 12.50M };
+            var pizza2 = new Product() { Name = "Margherita", Price = 15.50M };
+            var pizza3 = new Product() { Name = "Hawaiian", Price = 17.00M };
+
+            context.Products.Add(pizza1);
+            context.Products.Add(pizza2);
+            context.Products.Add(pizza3);
+
+            context.SaveChanges();
+            }
+            
+            var products = context.Products
+                                .Where(p => p.Price > 10.00M)
+                                .OrderBy(p => p.Name).ToList();
+
+            foreach (Product p in products)
+                if (context.Products.Any())
+                {
+                    Console.WriteLine($"Id:    {p.Id}");
+                    Console.WriteLine($"Name:  {p.Name}");
+                    Console.WriteLine($"Price: {p.Price}");
+                    Console.WriteLine(new string('-', 20));
+                }
+            return 0;
+        }
+
     }
 }

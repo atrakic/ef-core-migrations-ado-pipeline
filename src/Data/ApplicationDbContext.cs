@@ -1,7 +1,7 @@
-using ContosoPizza.Models;
+using ExampleEF.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ContosoPizza.Data;
+namespace ExampleEF.Data;
 
 public class ApplicationDbContext : DbContext
 {
@@ -23,12 +23,14 @@ public class ApplicationDbContext : DbContext
             options => options.EnableRetryOnFailure());
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+
+    }
+
     public DbSet<Customer> Customers { get; set; } = null!;
     public DbSet<Order> Orders { get; set; } = null!;
     public DbSet<Product> Products { get; set; } = null!;
     public DbSet<OrderDetail> OrderDetails { get; set; } = null!;
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-    }
 }
