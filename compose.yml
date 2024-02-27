@@ -6,7 +6,6 @@ services:
     environment:
       - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
       - ACCEPT_EULA=Y
-      - MSSQL_AGENT_ENABLED=true
     ports:
       - 1433:1433
     healthcheck:
