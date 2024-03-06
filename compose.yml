@@ -1,15 +1,15 @@
 services:
   db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+    image: mcr.microsoft.com/mssql/server:${TAG:-2022-latest}
     container_name: db
     hostname: db
     environment:
-      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD:-Strong%Passw0rd}
       - ACCEPT_EULA=Y
     ports:
       - 1433:1433
     healthcheck:
-      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${MSSQL_SA_PASSWORD}" -Q "SELECT getdate()" -b
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "${MSSQL_SA_PASSWORD:-Strong%Passw0rd}" -Q "SELECT getdate()" -b
       interval: 10s
       timeout: 3s
       retries: 10

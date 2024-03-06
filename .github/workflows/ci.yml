@@ -9,11 +9,10 @@ on:
       - '**.cs'
 
 env:
-  DOTNET_VERSION: '7.0.x' # The .NET SDK version to use
+  DOTNET_VERSION: '8.0.x' # The .NET SDK version to use
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -28,3 +27,18 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal
+
+    - run: |
+        make db
+
+    - name: Update database
+      run: |
+        dotnet tool update --local dotnet-ef
+        make migrations
+        #dotnet ef database update -c DataContext -p MyProj -s MyProjFactory
+        #dotnet ef migrations script --project "${{ github.workspace }}"/src/demo.csproj \
+        #  -i -v -o "${{ github.workspace }}/Migrations.sql"
+        make run
+      env:
+        ASPNETCORE_ENVIRONMENT: Development
+        SQL_CONNECTION: 'Server=localhost;UID=sa;PWD=1StrongPwd!!;trusted_connection=false;Persist Security Info=False;Encrypt=False;Connection Timeout=3;'
