@@ -1,3 +1,4 @@
+SHELL:=/bin/bash
 MAKEFLAGS += --silent
 
 SQL_CONNECTION = "Server=localhost;UID=sa;PWD=${MSSQL_SA_PASSWORD};trusted_connection=false;Persist Security Info=False;Encrypt=False;Connection Timeout=3;"
